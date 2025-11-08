@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gemma3:1b Chatbot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <style>
-          * {
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -23,30 +24,8 @@
 
         .chat-container {
             width: 100%;
-            max-width: 800px;
-            height: 80vh;
-            background-color: white;
-            border-radius: 20px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .chat-container {
-            width: 100%;
-            max-width: 800px;
-            height: 80vh;
+            max-width: 900px;
+            height: 85vh;
             background-color: white;
             border-radius: 20px;
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
@@ -107,10 +86,10 @@
         }
 
         .message {
-            max-width: 80%;
-            padding: 12px 18px;
+            max-width: 85%;
+            padding: 15px 20px;
             border-radius: 18px;
-            line-height: 1.4;
+            line-height: 1.5;
             position: relative;
             animation: fadeIn 0.3s ease;
         }
@@ -129,25 +108,151 @@
 
         .bot-message {
             align-self: flex-start;
-            background-color: #f1f3f6;
+            background-color: #f8f9fa;
             color: #333;
             border-bottom-left-radius: 5px;
+            border: 1px solid #e9ecef;
         }
 
         .message-time {
             font-size: 0.7rem;
             opacity: 0.7;
-            margin-top: 5px;
+            margin-top: 8px;
             text-align: right;
+        }
+
+        /* Markdown Formatting Styles */
+        .formatted-content {
+            line-height: 1.6;
+        }
+
+        .formatted-content h1,
+        .formatted-content h2,
+        .formatted-content h3 {
+            margin: 15px 0 10px 0;
+            color: #2d3748;
+        }
+
+        .formatted-content h1 {
+            font-size: 1.4em;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 5px;
+        }
+
+        .formatted-content h2 {
+            font-size: 1.3em;
+        }
+
+        .formatted-content h3 {
+            font-size: 1.2em;
+        }
+
+        .formatted-content p {
+            margin: 10px 0;
+        }
+
+        .formatted-content ul,
+        .formatted-content ol {
+            margin: 10px 0 10px 20px;
+        }
+
+        .formatted-content li {
+            margin: 5px 0;
+        }
+
+        .formatted-content blockquote {
+            border-left: 4px solid #4a6ee0;
+            background-color: #f8f9fa;
+            margin: 15px 0;
+            padding: 10px 15px;
+            font-style: italic;
+        }
+
+        .formatted-content code {
+            background-color: #f1f3f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #d63384;
+        }
+
+        .formatted-content pre {
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .formatted-content pre code {
+            background: none;
+            padding: 0;
+            border-radius: 0;
+            color: #f8f8f2;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #2d2d2d;
+            padding: 8px 15px;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: -10px;
+            font-size: 0.8em;
+            color: #ccc;
+        }
+
+        .copy-button {
+            background: #4a6ee0;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: background-color 0.2s;
+        }
+
+        .copy-button:hover {
+            background: #3a5ec8;
+        }
+
+        .formatted-content table {
+            border-collapse: collapse;
+            margin: 15px 0;
+            width: 100%;
+            background-color: white;
+        }
+
+        .formatted-content th,
+        .formatted-content td {
+            border: 1px solid #e2e8f0;
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .formatted-content th {
+            background-color: #f7fafc;
+            font-weight: 600;
+        }
+
+        .formatted-content tr:nth-child(even) {
+            background-color: #f8f9fa;
         }
 
         .typing-indicator {
             display: none;
             align-self: flex-start;
-            background-color: #f1f3f6;
-            padding: 12px 18px;
+            background-color: #f8f9fa;
+            padding: 15px 20px;
             border-radius: 18px;
             border-bottom-left-radius: 5px;
+            border: 1px solid #e9ecef;
         }
 
         .typing-dots {
@@ -237,23 +342,46 @@
             border-top: 1px solid #eaeaea;
         }
 
+        /* Scrollbar styling */
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
         @media (max-width: 600px) {
             .chat-container {
                 height: 90vh;
             }
             
             .message {
-                max-width: 90%;
+                max-width: 95%;
             }
             
             .chat-header h1 {
                 font-size: 1.5rem;
             }
+            
+            .formatted-content pre {
+                font-size: 0.8em;
+            }
         }
     </style>
 </head>
 <body>
-<div class="chat-container">
+    <div class="chat-container">
         <div class="chat-header">
             <h1>Gemma3:1b Chatbot</h1>
             <p>Powered by Ollama</p>
@@ -265,7 +393,17 @@
         
         <div class="chat-messages" id="chatMessages">
             <div class="message bot-message">
-                Hello! I'm Gemma3:1b, an AI assistant powered by Ollama. How can I help you today?
+                <div class="formatted-content">
+                    <h3>👋 Hello! I'm Gemma3:1b</h3>
+                    <p>I'm an AI assistant powered by Ollama with <strong>rich formatting support</strong> including:</p>
+                    <ul>
+                        <li>📝 <strong>Markdown</strong> formatting</li>
+                        <li>💻 <strong>Code syntax highlighting</strong></li>
+                        <li>📊 <strong>Tables</strong> and lists</li>
+                        <li>🎨 <strong>Blockquotes</strong> and more!</li>
+                    </ul>
+                    <p>Try asking me to write code, create lists, or format complex information!</p>
+                </div>
                 <div class="message-time">Just now</div>
             </div>
         </div>
@@ -289,14 +427,32 @@
         </div>
         
         <div class="model-info">
-            Model: Gemma3:1b | Powered by Ollama
+            Model: Gemma3:1b | Powered by Ollama | Formatting Enabled
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.2/marked.min.js"></script>
     <script>
         // Configuration
         const API_BASE_URL = 'http://localhost:3001/api';
         let conversationHistory = [];
+
+        // Configure marked for markdown parsing
+        marked.setOptions({
+            highlight: function(code, lang) {
+                if (lang && hljs.getLanguage(lang)) {
+                    try {
+                        return hljs.highlight(code, { language: lang }).value;
+                    } catch (err) {
+                        console.warn(`Error highlighting ${lang} code:`, err);
+                    }
+                }
+                return hljs.highlightAuto(code).value;
+            },
+            breaks: true,
+            gfm: true
+        });
 
         document.addEventListener('DOMContentLoaded', function() {
             const chatMessages = document.getElementById('chatMessages');
@@ -315,11 +471,9 @@
                 try {
                     statusText.textContent = 'Checking server...';
                     
-                    // Check backend server
                     const healthResponse = await fetch(`${API_BASE_URL}/health`);
                     if (!healthResponse.ok) throw new Error('Backend server not responding');
                     
-                    // Check Ollama
                     const ollamaResponse = await fetch(`${API_BASE_URL}/check-ollama`);
                     const ollamaData = await ollamaResponse.json();
                     
@@ -351,12 +505,38 @@
                 const timeString = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                 
                 messageDiv.innerHTML = `
-                    <strong>System:</strong> ${content}
+                    <div class="formatted-content">
+                        <strong>System:</strong> ${content}
+                    </div>
                     <div class="message-time">${timeString}</div>
                 `;
                 
                 chatMessages.appendChild(messageDiv);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // Function to format message content
+            function formatContent(content) {
+                // Convert markdown to HTML
+                let formattedContent = marked.parse(content);
+                
+                // Add copy buttons to code blocks
+                formattedContent = formattedContent.replace(
+                    /<pre><code class="language-(\w+)">([\s\S]*?)<\/code><\/pre>/g,
+                    function(match, lang, code) {
+                        return `
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <span>${lang}</span>
+                                    <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                                </div>
+                                <pre><code class="language-${lang}">${code}</code></pre>
+                            </div>
+                        `;
+                    }
+                );
+
+                return formattedContent;
             }
 
             // Function to add a message to the chat
@@ -367,13 +547,31 @@
                 const time = new Date();
                 const timeString = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                 
-                messageDiv.innerHTML = `
-                    ${content}
-                    <div class="message-time">${timeString}</div>
-                `;
+                if (isUser) {
+                    // User messages are plain text
+                    messageDiv.innerHTML = `
+                        ${content}
+                        <div class="message-time">${timeString}</div>
+                    `;
+                } else {
+                    // Bot messages are formatted
+                    messageDiv.innerHTML = `
+                        <div class="formatted-content">${formatContent(content)}</div>
+                        <div class="message-time">${timeString}</div>
+                    `;
+                }
                 
                 chatMessages.appendChild(messageDiv);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                // Apply syntax highlighting to new code blocks
+                if (!isUser) {
+                    setTimeout(() => {
+                        document.querySelectorAll('pre code').forEach((block) => {
+                            hljs.highlightElement(block);
+                        });
+                    }, 100);
+                }
 
                 // Add to conversation history
                 if (isUser) {
@@ -464,8 +662,27 @@
             // Focus on input when page loads
             chatInput.focus();
         });
-    </script>
 
-    
+        // Global function to copy code
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block').querySelector('code');
+            const text = codeBlock.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.style.background = '#10b981';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '#4a6ee0';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy code: ', err);
+                button.textContent = 'Failed!';
+                button.style.background = '#ef4444';
+            });
+        }
+    </script>
 </body>
 </html>
